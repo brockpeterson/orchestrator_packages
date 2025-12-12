@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item1" object-name="workflow:name=generic" id="cdb1e140-a1b9-4b61-b2bc-ad09bd310801" editor-version="2.0" version="0.0.0" api-version="6.0.0" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Set Windows Administrator Password</display-name>
+    <position y="50.0" x="100.0"/>
+    <input>
+        <param name="vm" type="string"/>
+        <param name="newPassword" type="string"/>
+    </input>
+    <output/>
+    <workflow-item name="item0" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="50.0" x="300.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item0" type="task" comparator="0">
+        <display-name>Scriptable task</display-name>
+        <script encoded="false">// Inputs: vm (VC:VirtualMachine), newPassword (String)
+var adminUser = "Administrator";
+System.log("Attempting to reset password for VM: " + vm.name);
+
+var guestAuth = new VcNamePasswordAuthentication();
+guestAuth.username = adminUser;
+guestAuth.password = vm.guest.guestIdentity.userName == adminUser ? vm.guest.guestIdentity.password : ""; 
+// If you don’t have the current password stored, you might need Guest Operations with elevated privileges
+
+var mgr = vm.sdkConnection.guestOperationsManager;
+var procMgr = mgr.processManager;
+
+var scriptSpec = new VcGuestProgramSpec();
+scriptSpec.programPath = "cmd.exe";
+scriptSpec.arguments = "/c net user " + adminUser + " \"" + newPassword + "\"";
+
+System.log("Running guest operation to reset Administrator password...");
+procMgr.startProgramInGuest(vm, guestAuth, scriptSpec);
+System.log("Password reset command sent to VM: " + vm.name);
+</script>
+        <in-binding/>
+        <out-binding/>
+        <description>Simple task with custom script capability.</description>
+        <position y="60.0" x="150.0"/>
+    </workflow-item>
+</ns2:workflow>

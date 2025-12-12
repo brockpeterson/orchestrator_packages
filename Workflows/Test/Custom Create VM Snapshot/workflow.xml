@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:workflow xmlns:ns2="http://vmware.com/vco/workflow" root-name="item3" object-name="Workflow:name=generic" id="3e78f75c-f59d-4388-b8a8-d29e4b82117d" editor-version="2.0" version="0.2.0" api-version="6.0.0" allowed-operations="vef" restartMode="1" resumeFromFailedMode="0">
+    <display-name>Custom Create VM Snapshot</display-name>
+    <description>Creates a snapshot.</description>
+    <ref-types>(VC:VirtualMachine)</ref-types>
+    <position y="40.0" x="160.0"/>
+    <input>
+        <param name="inputProperties" type="Properties"/>
+    </input>
+    <output/>
+    <attrib name="task" type="VC:Task">
+        <value encoded="n"/>
+        <description>Task to await</description>
+    </attrib>
+    <attrib name="progress" type="boolean">
+        <value encoded="n">false</value>
+        <description>Log progress while waiting for the task to complete</description>
+    </attrib>
+    <attrib name="pollRate" type="number">
+        <value encoded="n">2.0</value>
+        <description>Polling rate for the task state, in seconds</description>
+    </attrib>
+    <attrib name="snapshot" type="VC:VirtualMachineSnapshot">
+        <value encoded="n"/>
+        <description>The snapshot created</description>
+    </attrib>
+    <attrib name="quiesce" type="boolean">
+        <value encoded="n">false</value>
+        <description>If TRUE and the virtual machine is powered on when the snapshot is taken, VMware Tools are used to quiesce the file system in the virtual machine.</description>
+    </attrib>
+    <attrib name="memory" type="boolean">
+        <value encoded="n">false</value>
+        <description>If TRUE, the snapshot includes a dump of the internal state of the virtual machine (a memory dump). </description>
+    </attrib>
+    <attrib name="description" type="string">
+        <value encoded="n"></value>
+        <description>Snapshot description.</description>
+    </attrib>
+    <attrib name="name" type="string">
+        <value encoded="n"></value>
+        <description>Snapshot name. The name need not be unique for this virtual machine.</description>
+    </attrib>
+    <attrib name="vm" type="VC:VirtualMachine">
+        <value encoded="n"/>
+        <description>Virtual machine of which to create a snapshot</description>
+    </attrib>
+    <attrib name="vmid" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <attrib name="vcenterid" type="string">
+        <value encoded="n"></value>
+    </attrib>
+    <workflow-item name="item0" out-name="item1" type="task" script-module="com.vmware.library.vc.vm.snapshot/createSnapshot" comparator="0">
+        <display-name>createSnapshot</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.library.vc.vm.snapshot").createSnapshot(vm,name,description,memory,quiesce) ;</script>
+        <in-binding>
+            <bind name="vm" type="VC:VirtualMachine" export-name="vm">
+                <description>The VM on which to create a snapshot</description>
+            </bind>
+            <bind name="quiesce" type="boolean" export-name="quiesce">
+                <description>If TRUE and the virtual machine is powered on when the snapshot is taken, VMware Tools is used to quiesce the file system in the virtual machine.</description>
+            </bind>
+            <bind name="name" type="string" export-name="name">
+                <description>The name for this snapshot. The name need not be unique for this virtual machine. </description>
+            </bind>
+            <bind name="memory" type="boolean" export-name="memory">
+                <description>If TRUE, a dump of the internal state of the virtual machine (basically a memory dump) is included in the snapshot. </description>
+            </bind>
+            <bind name="description" type="string" export-name="description">
+                <description>A description for this snapshot. If omitted, a default description may be provided. </description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="VC:Task" export-name="task"/>
+        </out-binding>
+        <description>Creates a new snapshot of this virtual machine. As a side effect, this updates the current snapshot. 
+Any % (percent) character used in this name parameter must be escaped, unless it is used to start an escape sequence. Clients may also escape any other characters in this name parameter. </description>
+        <position y="240.0" x="400.0"/>
+    </workflow-item>
+    <workflow-item name="item1" out-name="item2" type="task" script-module="com.vmware.library.vc.basic/vim3WaitTaskEnd" comparator="0">
+        <display-name>vim3WaitTaskEnd</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.library.vc.basic").vim3WaitTaskEnd(task,progress,pollRate) ;</script>
+        <in-binding>
+            <bind name="task" type="VC:Task" export-name="task">
+                <description>Task to Wait for</description>
+            </bind>
+            <bind name="progress" type="boolean" export-name="progress">
+                <description>Log progess while waiting for the task</description>
+            </bind>
+            <bind name="pollRate" type="number" export-name="pollRate">
+                <description>Polling rate for the task state [seconds]</description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="Any" export-name="snapshot"/>
+        </out-binding>
+        <description>Wait a VIM 3 Task to end.
+When task ended, return the </description>
+        <position y="340.0" x="400.0"/>
+    </workflow-item>
+    <workflow-item name="item2" type="end" end-mode="0" comparator="0">
+        <in-binding/>
+        <out-binding/>
+        <position y="400.0" x="280.0"/>
+    </workflow-item>
+    <workflow-item name="item3" out-name="item4" type="task" comparator="0">
+        <display-name>Set Script Properties</display-name>
+        <script encoded="false">var customProperties = inputProperties.get("customProperties");
+vmid = inputProperties.get("externalIds")[0];
+vcenterid = customProperties["vcUuid"];
+name = Date.now();</script>
+        <in-binding>
+            <bind name="inputProperties" type="Properties" export-name="inputProperties"/>
+        </in-binding>
+        <out-binding>
+            <bind name="vmid" type="string" export-name="vmid"/>
+            <bind name="vcenterid" type="string" export-name="vcenterid"/>
+            <bind name="name" type="string" export-name="name"/>
+        </out-binding>
+        <description>Simple task with custom script capability.</description>
+        <position y="40.0" x="420.0"/>
+    </workflow-item>
+    <workflow-item name="item4" out-name="item0" type="task" script-module="com.vmware.test/getVcenterVMbyID" comparator="0">
+        <display-name>getVcenterVMbyID</display-name>
+        <script encoded="false">//Auto generated script, cannot be modified !
+actionResult = System.getModule("com.vmware.test").getVcenterVMbyID(vmId,vcId);
+</script>
+        <in-binding>
+            <bind name="vmId" type="string" export-name="vmid">
+                <description></description>
+            </bind>
+            <bind name="vcId" type="string" export-name="vcenterid">
+                <description></description>
+            </bind>
+        </in-binding>
+        <out-binding>
+            <bind name="actionResult" type="VC:VirtualMachine" export-name="vm"/>
+        </out-binding>
+        <description>Add a note to the workflow schema.</description>
+        <position y="140.0" x="420.0"/>
+    </workflow-item>
+</ns2:workflow>
