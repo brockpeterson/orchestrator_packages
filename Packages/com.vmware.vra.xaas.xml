@@ -1,3 +1,4 @@
+<!-- Adding a comment to this package -->
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <package>
 <elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='452cae92-a61b-41af-8747-b846ef284076'&dunesName='Action'&name='findVcVmByVcAndVmUuid'&category='com.vmware.vra.xaas']]></elm>
