@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package>
+<elm src-category='null'><![CDATA[dunes://service.dunes.ch/Action?id='452cae92-a61b-41af-8747-b846ef284076'&dunesName='Action'&name='findVcVmByVcAndVmUuid'&category='com.vmware.vra.xaas']]></elm>
+<used-plugin name='AD' version='2.0.6' />
+<used-plugin name='Configurator' version='7.0.0' />
+<used-plugin name='PowerShell' version='1.0.7' />
+<used-plugin name='REST' version='2.0.0' />
+<used-plugin name='SOAP' version='2.0.0' />
+<used-plugin name='VC' version='6.0.2' />
+<used-plugin name='vCloud' version='5.5.1.2' />
+</package>
