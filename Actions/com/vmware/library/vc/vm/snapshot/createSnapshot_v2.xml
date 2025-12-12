@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!-- adding comments and adjusting throw text-->
 <dunes-script-module name="createSnapshot_v2" result-type="VC:Task" api-version="6.0.0" id="c1eed3fc-80da-4f90-85c9-fb1e5a6281ab" version="0.2.0" category-name="com.vmware.library.vc.vm.snapshot">
   <description><![CDATA[Creates a new snapshot of this virtual machine. As a side effect, this updates the current snapshot. 
 Any % (percent) character used in this name parameter must be escaped, unless it is used to start an escape sequence. Clients may also escape any other characters in this name parameter. ]]></description>
@@ -11,7 +12,7 @@ Any % (percent) character used in this name parameter must be escaped, unless it
 	throw "ReferenceError: VM cannot be null";
 }
 if (name == null || name == "") {
-	throw "ReferenceError: Name cannot be null or empty string";
+	throw "ReferenceError: Name cannot be null or empty string please fix this!";
 }
 return vm.createSnapshot_Task(name, description, memory, quiesce);]]></script>
 </dunes-script-module>
